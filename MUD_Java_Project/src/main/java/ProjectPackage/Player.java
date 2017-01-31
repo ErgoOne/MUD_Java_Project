@@ -11,6 +11,15 @@ package ProjectPackage;
  */
 public class Player {
     private String NomJ;
+    private int Pvie;
+
+    public void setPvie(int Pvie) {
+        this.Pvie = Pvie;
+    }
+
+    public int getPvie() {
+        return Pvie;
+    }
     
     
     

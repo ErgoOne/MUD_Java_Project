@@ -5,11 +5,17 @@
  */
 package ProjectPackage;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Badr
  */
-public class Room {
-    String NomR;
+public class Dungeon {
+    public String NomD;
+    public ArrayList<Player> Players = new ArrayList<>();
+    
+    //Room DRooms[5][5];
+    
     
 }

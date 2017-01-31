@@ -47,6 +47,7 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     int rtr=0;
     rtr=Addplayer(nomJ);
+        System.out.println("le rtr !: "+rtr);
         if (rtr==1) 
     {
         System.out.println("~Player "+nomJ +" is connected");
@@ -58,24 +59,29 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
     }
     
     private int Addplayer(String nomJ) {
+        int test=0;
         System.out.println("Dans le Addplayer");
         if (!Players.isEmpty())
         {
-        for (int i = 0; i < Players.size(); i++) {
+        for (int i = 0; i < Players.size() ; i++) {
                 if (nomJ.equals(Players.get(i).getNomJ()))
                         {
-                        System.out.println("Dans le Addplayer + boucle "+i+ " nonj : "+nomJ);
+                        System.out.println("Dans le Addplayer ELSE");
+                        test=1;
+                        return 2;
+                        
+                        }
+        }
+        if (test==0)
+        {        System.out.println("Creation d'un nouveau joueur");
                         Player tmp = new Player(nomJ);
                         Players.add(tmp);
                         return 1;
-                        }
-                else {
-                    System.out.println("Dans le Addplayer ELSE");
-                    return 2;} // Joueur existant
         }
         }
         else if (Players.isEmpty())
         {
+            System.out.println("Ajout du joueur : tableau empty");
             Player tmp = new Player(nomJ);
                         Players.add(tmp);
                            return 1;
