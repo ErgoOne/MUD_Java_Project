@@ -11,33 +11,55 @@ import java.rmi.NotBoundException;
 import java.rmi.RMISecurityManager;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.util.Scanner;
 /**
  *
  * @author Badr
  */
 public class Client {
 
-
+private void ConnectToServer() {
+    
+            int rtr=0; // retour des fonctions interface
+        try {
+            Registry reg = LocateRegistry.getRegistry("127.0.0.78", 1010);
+            
+            //LocateRegistry.createRegistry(1099);
+            GServerInt rmi = (GServerInt) reg.lookup("rmi://127.0.0.78:1010/server");
+            //Naming.rebind("rmi://127.0.0.1:1099/server", reg);
+            System.out.println("~WELCOME TO THE MUD !");
+            System.out.println("~Please Enter your Nickname :");
+            Scanner sc = new Scanner(System.in);
+            String str = sc.nextLine();
+            if (!str.isEmpty())
+            {
+            rtr= rmi.ConnectToServ(str);
+            System.out.println("Connected to Server");
+            if (rtr==1)
+            {
+                System.out.println("~ "+str+ " You'r connected !");
+            }
+            else if (rtr==2)
+            {
+                System.out.println("##~ "+str+ " Already exists !");
+            }
+            else 
+            {
+                System.out.println("##~PAS COOL "+rtr+ " " +str);
+            }
+            }
+            
+        } catch (Exception e) {
+            System.out.println(" CATCH ConnectToServer Method " +e);
+        }
+    }
   public static void main(String[] args) {
-    System.out.println("Lancement du client");
-    if (System.getSecurityManager() == null) {
-      System.setSecurityManager(new RMISecurityManager());
-    }
-    try {
-      Remote r = Naming.lookup("rmi://127.0.0.1/TestRMI");
-      System.out.println(r);
-      if (r instanceof Int) {
-        String s = ((Int) r).getInformation();
-        System.out.println("chaine renvoyee = " + s);
-      }
-    } catch (MalformedURLException e) {
-      e.printStackTrace();
-    } catch (RemoteException e) {
-      e.printStackTrace();
-    } catch (NotBoundException e) {
-      e.printStackTrace();
-    }
-    System.out.println("Fin du client");
-  }
+    
+      Client CL= new Client();
+      CL.ConnectToServer();
+      
+}
 }
 

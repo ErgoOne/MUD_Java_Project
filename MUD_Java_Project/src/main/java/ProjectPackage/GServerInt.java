@@ -9,6 +9,6 @@ import java.rmi.*;
  *
  * @author Badr
  */
-public interface Int extends Remote{
-    public String getInformation() throws RemoteException;
+public interface GServerInt extends Remote{
+    public int ConnectToServ (String nomJ) throws RemoteException;
 }
