@@ -123,6 +123,7 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
            Dungeon tmp =new Dungeon(Integer.toString(size+1));
            Dungs.add(tmp);
            System.out.println("Size : " + size +"Creation of a new Dungeon : " +tmp.getNomD());
+           tmp.InitDungMap();
         
         }
     @Override
@@ -202,6 +203,17 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
             }
         }
         return 0;
+    }
+
+    @Override
+    public String GetDunMap(String NomJ, String NomD) {
+        String rtr="";
+        for (int i = 0; i < Dungs.size(); i++) {
+            if(Dungs.get(i).getNomD().equals(NomD))
+            rtr=Dungs.get(i).printRow(Dungs.get(i).DMap);
+          return rtr;
+        }
+        return rtr;
     }
  
    

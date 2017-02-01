@@ -15,4 +15,5 @@ public interface GServerInt extends Remote{
     public int ChooseDung (int NDung, String NomJ) throws RemoteException;
     public String ShowPofDung (int NDung) throws RemoteException;
     public int ExitDung (int Ndung, String NomJ) throws RemoteException;
+    public String GetDunMap (String NomJ, String NomD) throws RemoteException;
 }

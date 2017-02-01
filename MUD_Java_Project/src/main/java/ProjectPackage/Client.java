@@ -85,8 +85,8 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
             System.out.println("~ORDERS~ To exit the game press 99 :");
     }
     public  void ShowDungOrders () {
-           /* System.out.println("~ORDERS~ To display Dungeon's Please press 1 :");
-            System.out.println("~ORDERS~ To choose a Dungeon's Please press 2 :");
+            System.out.println("~ORDERS~ To display the Dungeon's Map Please press 1 :");
+            /* System.out.println("~ORDERS~ To choose a Dungeon's Please press 2 :");
             System.out.println("~ORDERS~ To see players of a precise Dungeon press 3 :");*/
             System.out.println("~ORDERS~ To exit the Dung please press 98 :");
     }
@@ -137,8 +137,18 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
                                 choice=8;
                             }
                         }
+                        if (choice==1)
+                        {
+                            String print;
+                        print = rmi.GetDunMap(CL.getName(), Integer.toString(CL.MyDung));
+                            System.out.println(print);
+                        }
                         
                     }
+                }
+                else if(rtr==2)
+                {
+                    System.out.println("~ERROR~ Too much players, please choose another Dung");
                 }
             }
             if(choice==3)

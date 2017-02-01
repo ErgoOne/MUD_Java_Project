@@ -11,5 +11,17 @@ package ProjectPackage;
  */
 public class Room {
     String NomR;
+
+    public Room(String NomR) {
+        this.NomR = NomR;
+    }
+
+    public String getNomR() {
+        return NomR;
+    }
+
+    public void setNomR(String NomR) {
+        this.NomR = NomR;
+    }
     
 }
