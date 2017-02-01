@@ -22,6 +22,7 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
      //private static Vector classes = new Vector();
     // Gestion des joueurs loggés 
     public ArrayList<Player> Players = new ArrayList<>();
+    public ArrayList<Dungeon> Dungs = new ArrayList<>();
     protected GameServer() throws RemoteException {
 
     super();
@@ -35,7 +36,7 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
             GameServer GS = new GameServer();
             reg.rebind("rmi://127.0.0.78:1010/server", GS);
             System.out.println("Server started ! ");
-           
+            GS.CreateDung();
         } catch (Exception e) {
             System.out.println(" Catch GS main  : "+ e);
             }
@@ -47,10 +48,12 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     int rtr=0;
     rtr=Addplayer(nomJ);
-        System.out.println("le rtr !: "+rtr);
+        //System.out.println("le rtr !: "+rtr);
         if (rtr==1) 
     {
         System.out.println("~Player "+nomJ +" is connected");
+        Player tmp =new Player(nomJ);
+        Players.add(tmp);
         return 1; // OK
     }
     else if (rtr==2) return 2; // NOK
@@ -60,20 +63,20 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
     
     private int Addplayer(String nomJ) {
         int test=0;
-        System.out.println("Dans le Addplayer");
+        //System.out.println("Dans le Addplayer");
         if (!Players.isEmpty())
         {
         for (int i = 0; i < Players.size() ; i++) {
                 if (nomJ.equals(Players.get(i).getNomJ()))
                         {
-                        System.out.println("Dans le Addplayer ELSE");
+                        System.out.println("~Name already exists");
                         test=1;
                         return 2;
                         
                         }
         }
         if (test==0)
-        {        System.out.println("Creation d'un nouveau joueur");
+        {        System.out.println("New player is created : "+nomJ);
                         Player tmp = new Player(nomJ);
                         Players.add(tmp);
                         return 1;
@@ -112,6 +115,56 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
                                 // si on arrive là, c'est qu'il y à un problème
                                 return null;
 	}*/
+
+    private void CreateDung () {
+        int size;
+        size= Dungs.size();
+          
+           Dungeon tmp =new Dungeon(Integer.toString(size+1));
+           Dungs.add(tmp);
+           System.out.println("Size : " + size +"Creation of a new Dungeon : " +tmp.getNomD());
+        
+        }
+    @Override
+    public String ShowDungs() throws RemoteException {
+        String tmp="";
+        String Newligne=System.getProperty("line.separator");
+        for (int i = 0; i < Dungs.size(); i++) {
+                if (Dungs.get(i).getNPlayers()!=4)
+                {
+                    tmp = "--Dung "+Dungs.get(i).getNomD()+ " Number of players Wainting : "+Dungs.get(i).getNPlayers() +Newligne+ tmp;
+                                    }
+		}
+        
+       return tmp;
+    }
+
+    @Override
+    public int ChooseDung(int NDung, String NomJ) throws RemoteException {
+        //System.out.println("PLPLP : "+Dungs.get(NDung).getNPlayers());
+                int np=Dungs.get(NDung-1).getNPlayers();
+
+        if (NDung > Dungs.size()) 
+        {return 2;}
+        else if(np==4)
+            return 2;
+        else
+            for (int i = 0; i < Players.size(); i++) {
+                if(Players.get(i).getNomJ().equals(NomJ)){
+                    Dungs.get(NDung-1).addPlayer(Players.get(i));
+                    return 1;
+                }
+		}
+            
+        
+        return 0;
+    }
+
+    @Override
+    
+    public String ShowPofDung(int NDung) throws RemoteException {
+        return Dungs.get(NDung-1).showplayers();
+    }
  
    
     

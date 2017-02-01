@@ -11,4 +11,7 @@ import java.rmi.*;
  */
 public interface GServerInt extends Remote{
     public int ConnectToServ (String nomJ) throws RemoteException;
+    public String ShowDungs () throws RemoteException;
+    public int ChooseDung (int NDung, String NomJ) throws RemoteException;
+    public String ShowPofDung (int NDung) throws RemoteException;
 }
