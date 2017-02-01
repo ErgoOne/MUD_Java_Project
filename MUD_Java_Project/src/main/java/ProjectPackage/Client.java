@@ -22,7 +22,9 @@ import java.util.logging.Logger;
  */
 public class Client {
 private String name;
-
+private int RefChat;
+private int MyDung;
+static String Newligne=System.getProperty("line.separator");
     public void setName(String name) {
         System.out.println("ProjectPackage.Client.setName() OK");
         this.name = name;
@@ -75,6 +77,19 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
         
         return 0;
     }
+    public void ShowOrders ()
+    {
+            System.out.println("~ORDERS~ To display Dungeon's Please press 1 :");
+            System.out.println("~ORDERS~ To choose a Dungeon's Please press 2 :");
+            System.out.println("~ORDERS~ To see players of a precise Dungeon press 3 :");
+            System.out.println("~ORDERS~ To exit the game press 99 :");
+    }
+    public  void ShowDungOrders () {
+           /* System.out.println("~ORDERS~ To display Dungeon's Please press 1 :");
+            System.out.println("~ORDERS~ To choose a Dungeon's Please press 2 :");
+            System.out.println("~ORDERS~ To see players of a precise Dungeon press 3 :");*/
+            System.out.println("~ORDERS~ To exit the Dung please press 98 :");
+    }
   public static void main(String[] args) throws NotBoundException {
       GServerInt rmi;
       Scanner sc = new Scanner(System.in);
@@ -91,23 +106,39 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
         rtr=CL.ConnectToServer(CL, rmi);
         while (choice!=99)
         {
-            System.out.println("~ORDERS~ To display Dungeon's Please press 1 :");
-            System.out.println("~ORDERS~ To choose a Dungeon's Please press 2 :");
-            System.out.println("~ORDERS~ To see players of a precise Dungeon press 3 :");
-            System.out.println("~ORDERS~ To exit the game press 99 :");
+            System.out.println("~ORDERS~ To display Orders please press 8 :");
             choice = sc.nextInt();
             if(choice==1)
             {
-                System.out.println("~"+rmi.ShowDungs());
+                System.out.println("~~~ All Dung's ~~~"+Newligne+rmi.ShowDungs());
             }
             if(choice==2)
             {
                 System.out.println("~ORDERS~ Please give the Dungeon number:");
                 selection = sc.nextInt();
-                rtr=rmi.ChooseDung(rtr, CL.getName());
+                rtr=rmi.ChooseDung(selection, CL.getName());
                 if (rtr==1)
                 {
                     System.out.println("~OK~ You are on Dungeon number : "+selection);
+                    CL.MyDung=selection;
+                    System.out.println("mydun :" +CL.MyDung);
+                    while (choice != 8)
+                    {
+                        CL.ShowDungOrders();
+                        choice = sc.nextInt();
+                        if(choice ==98)
+                        {
+                            System.out.println("in the if 98");
+                            rtr=0;
+                            rtr=rmi.ExitDung(CL.MyDung, CL.getName());
+                            System.out.println("after the rmi. rtr =" +rtr);
+                            if (rtr==1) {
+                                System.out.println("~OK~ Back to Principal menu...");
+                                choice=8;
+                            }
+                        }
+                        
+                    }
                 }
             }
             if(choice==3)
@@ -116,8 +147,12 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
                 rtr = sc.nextInt();
                 System.out.println("~" +rmi.ShowPofDung(rtr));
             }
+            if (choice==8)
+            {
+                CL.ShowOrders();
+            }
           }
-      
+          System.out.println("Good bye..");
 
       } catch (RemoteException ex) {
         Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);

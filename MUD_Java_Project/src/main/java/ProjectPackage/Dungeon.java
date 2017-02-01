@@ -16,6 +16,7 @@ public class Dungeon {
     
     public String NomD;
     public ArrayList<Player> DungPlayers = new ArrayList<>();
+    public ArrayList<String> Chat = new ArrayList<>();
     
     //Room DRooms[5][5];
 
@@ -31,7 +32,7 @@ public class Dungeon {
         this.NomD = NomD;
     }
     public int getNPlayers(){
-        System.out.println("size of dungplayers : "+DungPlayers.size() );
+       // System.out.println("size of dungplayers : "+DungPlayers.size() );
         return DungPlayers.size();
     }
     public void addPlayer(Player p) {

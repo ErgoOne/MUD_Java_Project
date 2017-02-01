@@ -143,27 +143,65 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
     public int ChooseDung(int NDung, String NomJ) throws RemoteException {
         //System.out.println("PLPLP : "+Dungs.get(NDung).getNPlayers());
                 int np=Dungs.get(NDung-1).getNPlayers();
-
+        System.out.println("NDung Given : "+NDung );
+        System.out.println("ProjectPackage.GameServer.ChooseDung() Dungs size : "+Dungs.size() );
         if (NDung > Dungs.size()) 
         {return 2;}
         else if(np==4)
             return 2;
         else
+        {
             for (int i = 0; i < Players.size(); i++) {
                 if(Players.get(i).getNomJ().equals(NomJ)){
+                    System.out.println("Adding Player"+Players.get(i)+ " to Ndung number :"+(NDung));
                     Dungs.get(NDung-1).addPlayer(Players.get(i));
+                    int j = Dungs.get(NDung-1).getNPlayers();
+                    if (j==3)
+                    {
+                        String convert = Integer.toString(Dungs.size()+1);
+                        System.out.println("Creating new Dung Number : "+convert);
+                        Dungeon tmp = new Dungeon(convert);
+                        Dungs.add(tmp);
+                         return 1;
+                    }
                     return 1;
+                   
                 }
+                System.out.println("Pas sensé etre là !!");
 		}
+             return 1;
             
-        
-        return 0;
+        }
+
     }
 
     @Override
     
     public String ShowPofDung(int NDung) throws RemoteException {
         return Dungs.get(NDung-1).showplayers();
+    }
+
+    @Override
+    public int ExitDung(int Ndung, String NomJ) throws RemoteException {
+        System.out.println("Dans le ExitDung");
+        for (int i = 0; i < Dungs.size(); i++) {
+            System.out.println("Sur dung : "+Dungs.get(i).getNomD());
+            if(Dungs.get(i).getNomD().equals(Integer.toString(Ndung)))
+            {
+                for (int j = 0; j < Dungs.size(); j++) {
+                    System.out.println("NomJ du tab"+Dungs.get(i).DungPlayers.get(j).getNomJ());
+                    if(Dungs.get(i).DungPlayers.get(j).getNomJ().equals(NomJ))
+                    {
+                        System.out.println("Second if nomj: "+Dungs.get(i).DungPlayers.get(j).getNomJ());
+                       Dungs.get(i).DungPlayers.remove(j); 
+                        System.out.println("Suppression du joueur du Dung");
+                       return 1;
+                    }
+                    
+                }
+            }
+        }
+        return 0;
     }
  
    
