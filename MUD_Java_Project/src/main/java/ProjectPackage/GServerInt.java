@@ -20,4 +20,5 @@ public interface GServerInt extends Remote{
     public String WhereIam (String NomJ) throws RemoteException;
     public int MaxValDungMap (String NomD) throws RemoteException;
     public int SwitchRoom (String NomD, String NomJ, int x, int y) throws RemoteException;
+    public int IsRoomEmpty(int x, int y, String NomD) throws RemoteException;
 }

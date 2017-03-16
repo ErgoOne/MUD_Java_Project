@@ -24,6 +24,10 @@ public class Client {
 private String name;
 private int RefChat;
 private int MyDung;
+
+    public int getMyDung() {
+        return MyDung;
+    }
 static String Newligne=System.getProperty("line.separator");
     public void setName(String name) {
         System.out.println("ProjectPackage.Client.setName() OK");
@@ -84,7 +88,18 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
             System.out.println("~ORDERS~ To see players of a precise Dungeon press 3 :");
             System.out.println("~ORDERS~ To exit the game press 99 :");
     }
-    public  void ShowDungOrders () {
+    public  void ShowDungOrders (GServerInt rmi, Client CL) throws RemoteException {
+            String MyPosition = rmi.WhereIam(CL.getName());
+            String[] parts = MyPosition.split(",");
+            String part1 = parts[0]; // x
+            String part2 = parts[1]; //y
+            int x = Integer.parseInt(part1);
+            int y = Integer.parseInt(part2);
+            int r=rmi.IsRoomEmpty(x, y, Integer.toString(CL.getMyDung()));
+            if(r==1)
+            {
+            System.out.println("~CAUTION~ You're not alone in this room ! ");
+            }
             System.out.println("~ORDERS~ To display the Dungeon's Map Please press 1 :");
             System.out.println("~ORDERS~ To see the stat of the game Please press 2 :");
             System.out.println("~ORDERS~ To see Where I am press 3 :");
@@ -92,7 +107,6 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
             /* System.out.println("~ORDERS~ To see players of a precise Dungeon press 3 :");*/
             System.out.println("~ORDERS~ To exit the Dung please press 98 :");
     }
-    
     public void MyMooves (GServerInt rmi, Client CL) throws RemoteException{
     
             String MyPosition = rmi.WhereIam(CL.getName());
@@ -128,26 +142,43 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
                 System.out.println("Press "+i+" to go to the '"+x+"','"+(y+1)+"' Room");
                 i++;
             }
+             
              choice = sc.nextInt();
              if(choice==1)
              {
              retour=rmi.SwitchRoom(Integer.toString(CL.MyDung), CL.getName(), (x-1), y);
                  System.out.println("Retour : "+ retour);
+                 if(retour==1)
+             {
+                 System.out.println("D'autres joueurs sont dans la Room !");
+             }
              }
              else if(choice==2)
              {
              retour=rmi.SwitchRoom(Integer.toString(CL.MyDung), CL.getName(), x, (y-1));
              System.out.println("Retour : "+ retour);
+             if(retour==1)
+             {
+                 System.out.println("D'autres joueurs sont dans la Room !");
+             }
              }
              else if(choice==3)
              {
              retour=rmi.SwitchRoom(Integer.toString(CL.MyDung), CL.getName(), (x+1), y);
              System.out.println("Retour : "+ retour);
+             if(retour==1)
+             {
+                 System.out.println("D'autres joueurs sont dans la Room !");
+             }
              }
              else if(choice==4)
              {
              retour=rmi.SwitchRoom(Integer.toString(CL.MyDung), CL.getName(), x, (y+1));
              System.out.println("Retour : "+ retour);
+             if(retour==1)
+             {
+                 System.out.println("D'autres joueurs sont dans la Room !");
+             }
              }
              
     }
@@ -185,7 +216,7 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
                     System.out.println("mydun :" +CL.MyDung);
                     while (choice != 8)
                     {
-                        CL.ShowDungOrders();
+                        CL.ShowDungOrders(rmi, CL);
                         choice = sc.nextInt();
                         if(choice ==98)
                         {

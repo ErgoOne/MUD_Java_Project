@@ -27,9 +27,12 @@ public class Room {
         this.NomR = NomR;
     }
     
-    public void AddPlayer(Player P)
+    public int AddPlayer(Player P)
     {
     RoomPlayers.add(P);
+    if(RoomPlayers.size()>1)
+        return 1;
+    else return 2;
     }
     public void DelPlayer (Player P)
     {

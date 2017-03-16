@@ -298,9 +298,9 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
                                     
                                     Dungs.get(i).DMap[h][k].RoomPlayers.remove(o);
                                 System.out.println("PLayer removed from room "+Dungs.get(i).DMap[h][k].getNomR());
-                                Dungs.get(i).DMap[x][y].AddPlayer(Players.get(j));
+                                int p = Dungs.get(i).DMap[x][y].AddPlayer(Players.get(j));
                                 System.out.println("PLayer added to room "+Dungs.get(i).DMap[x][y].getNomR());
-                                return 1;
+                                return p;
                                 }
                             }
                             
@@ -313,6 +313,22 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
             }
             }
        return 0; // ERROR 
+    }
+
+    @Override
+    public int IsRoomEmpty(int x, int y, String NomD) throws RemoteException {
+        
+        for (int i=0; i<Dungs.size();i++)
+        {
+            if(Dungs.get(i).getNomD().equals(NomD))
+            {
+                if(Dungs.get(i).DMap[x][y].RoomPlayers.size()>1)
+                    return 1;
+                else
+                    return 0;
+            }
+        }
+        return 0;
     }
 }
  
