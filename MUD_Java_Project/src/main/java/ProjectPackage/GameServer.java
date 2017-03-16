@@ -156,6 +156,7 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
                 if(Players.get(i).getNomJ().equals(NomJ)){
                     System.out.println("Adding Player"+Players.get(i)+ " to Ndung number :"+(NDung));
                     Dungs.get(NDung-1).addPlayer(Players.get(i));
+                    Dungs.get(NDung-1).DMap[1][1].AddPlayer(Players.get(i));
                     int j = Dungs.get(NDung-1).getNPlayers();
                     if (j==3)
                     {
@@ -168,7 +169,7 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
                     return 1;
                    
                 }
-                System.out.println("Pas sensé etre là !!");
+                //System.out.println("Pas sensé etre là !!");
 		}
              return 1;
             
@@ -215,7 +216,104 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
         }
         return rtr;
     }
- 
-   
-    
+
+    @Override
+    public int IsDungComplete(String NomD) throws RemoteException {
+        int rtr;
+        for (int i = 0; i < Dungs.size(); i++) {
+            if (Dungs.get(i).getNomD().equals(NomD))
+            {
+                rtr=Dungs.get(i).DungPlayers.size();
+            
+            if(rtr==4)
+            {
+                return 1; // OK
+            }
+            else return 2; // NOK Wait..
+        }
+        }
+        return 0; // We should neever get here.
+        }
+
+    @Override
+    public String WhereIam(String NomJ) {
+        String Position="ErRor";
+        for (int i = 0; i < Dungs.size(); i++) {
+            for (int j = 0; j < Dungs.get(i).DungPlayers.size(); j++) {
+                if (Dungs.get(i).DungPlayers.get(j).getNomJ().equals(NomJ))
+                {
+                    System.out.println("1er if "+i+","+j);
+                   for (int x = 0; x <Dungs.get(i).getX() ; x++)
+                   {//System.out.println("x: "+x);
+                       for (int y = 0; y <Dungs.get(i).getY() ; y++)
+                       {//System.out.println("y: "+y);
+
+                        for (int h=0; h<Dungs.get(i).DMap[x][y].RoomPlayers.size();h++)
+                        {
+                             if(Dungs.get(i).DMap[x][y].RoomPlayers.get(h).getNomJ().equals(NomJ))
+                                     {
+                                       Position=(x+","+y);
+                                       return Position;
+                                     }
+                        }          
+                       }
+                   }
+                }
+            }
+        }
+            
+        return Position;
+    }
+
+    @Override
+    public int MaxValDungMap(String NomD) throws RemoteException {
+        for (int i = 0; i < Dungs.size(); i++) {
+        if(Dungs.get(i).NomD.equals(NomD))
+        {
+            System.out.println("MAX :" +Dungs.get(i).getX());
+            return Dungs.get(i).getX();
+        }
+            
+        }
+        return 0; // ERROR
+        }
+
+    public int SwitchRoom(String NomD, String NomJ, int x, int y) {
+        System.out.println("##SwitchRoom de "+NomJ+ " Destination "+x+","+y);
+        
+         for (int i = 0; i < Dungs.size(); i++) {
+             System.out.println("NomD Geti "+Dungs.get(i).NomD);
+        if(Dungs.get(i).NomD.equals(NomD))
+            for (int j = 0; j < Players.size(); j++) {
+                System.out.println("NomJ geti "+Players.get(j).getNomJ()+" NomJGiven "+NomJ);
+                if(Players.get(j).getNomJ().equals(NomJ))
+                {
+                    
+                    for (int h = 0; h < Dungs.get(i).getX(); h++) {
+                        for (int k = 0; k < Dungs.get(i).getX(); k++) {
+                            for (int o=0;o<Dungs.get(i).DMap[h][k].RoomPlayers.size();o++){
+                                if(Dungs.get(i).DMap[h][k].RoomPlayers.get(o).getNomJ().equals(NomJ))
+                                {
+                                    System.out.println("NomJ a changer de room : "+Dungs.get(i).DMap[h][k].RoomPlayers.get(o).getNomJ()+" Position :" +h+" , "+k);
+                                    
+                                    Dungs.get(i).DMap[h][k].RoomPlayers.remove(o);
+                                System.out.println("PLayer removed from room "+Dungs.get(i).DMap[h][k].getNomR());
+                                Dungs.get(i).DMap[x][y].AddPlayer(Players.get(j));
+                                System.out.println("PLayer added to room "+Dungs.get(i).DMap[x][y].getNomR());
+                                return 1;
+                                }
+                            }
+                            
+                        }
+                    }
+                    
+                }
+            
+            
+            }
+            }
+       return 0; // ERROR 
+    }
 }
+ 
+ 

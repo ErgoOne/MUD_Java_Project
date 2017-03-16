@@ -14,11 +14,20 @@ import java.util.Arrays;
  */
 public class Dungeon {
 
-    
+    public static final int X = 5;
+    public static final int Y = X;
+
+    public  int getX() {
+        return X;
+    }
+
+    public  int getY() {
+        return Y;
+    }
     public String NomD;
     public ArrayList<Player> DungPlayers = new ArrayList<>();
     public ArrayList<String> Chat = new ArrayList<>();
-    public Room[][] DMap= new  Room[5][5];
+    public Room[][] DMap= new  Room[X][Y];
     //Room DRooms[5][5];
     public void InitDungMap()
     {

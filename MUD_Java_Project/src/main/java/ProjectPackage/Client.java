@@ -86,9 +86,70 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
     }
     public  void ShowDungOrders () {
             System.out.println("~ORDERS~ To display the Dungeon's Map Please press 1 :");
-            /* System.out.println("~ORDERS~ To choose a Dungeon's Please press 2 :");
-            System.out.println("~ORDERS~ To see players of a precise Dungeon press 3 :");*/
+            System.out.println("~ORDERS~ To see the stat of the game Please press 2 :");
+            System.out.println("~ORDERS~ To see Where I am press 3 :");
+            System.out.println("~ORDERS~ To moove to other room press 4 :");
+            /* System.out.println("~ORDERS~ To see players of a precise Dungeon press 3 :");*/
             System.out.println("~ORDERS~ To exit the Dung please press 98 :");
+    }
+    
+    public void MyMooves (GServerInt rmi, Client CL) throws RemoteException{
+    
+            String MyPosition = rmi.WhereIam(CL.getName());
+            String[] parts = MyPosition.split(",");
+            int i=1;
+            Scanner sc = new Scanner(System.in);
+             int choice;
+             int retour=5;
+            String part1 = parts[0]; // x
+            String part2 = parts[1]; // y
+            int x = Integer.parseInt(part1);
+            int y = Integer.parseInt(part2);
+            int max = rmi.MaxValDungMap(Integer.toString(CL.MyDung));
+            if((x-1)>=1) { // (x-1),y
+                i=1;
+                System.out.println("Press "+i+" to go to the '"+(x-1)+"','"+y+"' Room");
+            }
+            if ((y-1)>=1) // (y-1),x
+            {
+                i=2;
+                System.out.println("Press "+i+" to go to the '"+x+"','"+(y-1)+"' Room");
+             
+            }
+            if ((x+1<max)) // (x+1),y
+                {
+                i=3;
+                System.out.println("Press "+i+" to go to the '"+(x+1)+"','"+y+"' Room");
+                
+            }
+             if ((y+1<max)) // (x),(y+1)
+                {
+                 i=4;
+                System.out.println("Press "+i+" to go to the '"+x+"','"+(y+1)+"' Room");
+                i++;
+            }
+             choice = sc.nextInt();
+             if(choice==1)
+             {
+             retour=rmi.SwitchRoom(Integer.toString(CL.MyDung), CL.getName(), (x-1), y);
+                 System.out.println("Retour : "+ retour);
+             }
+             else if(choice==2)
+             {
+             retour=rmi.SwitchRoom(Integer.toString(CL.MyDung), CL.getName(), x, (y-1));
+             System.out.println("Retour : "+ retour);
+             }
+             else if(choice==3)
+             {
+             retour=rmi.SwitchRoom(Integer.toString(CL.MyDung), CL.getName(), (x+1), y);
+             System.out.println("Retour : "+ retour);
+             }
+             else if(choice==4)
+             {
+             retour=rmi.SwitchRoom(Integer.toString(CL.MyDung), CL.getName(), x, (y+1));
+             System.out.println("Retour : "+ retour);
+             }
+             
     }
   public static void main(String[] args) throws NotBoundException {
       GServerInt rmi;
@@ -143,7 +204,24 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
                         print = rmi.GetDunMap(CL.getName(), Integer.toString(CL.MyDung));
                             System.out.println(print);
                         }
-                        
+                        if (choice==2)
+                        {
+                            int i;
+                            System.out.println(rmi.ShowPofDung(CL.MyDung));
+                            i=rmi.IsDungComplete(Integer.toString(CL.MyDung));
+                            if (i==2)
+                                System.out.println("~OK~ Wainting for players");
+                            else 
+                                System.out.println("~OK~ Game is ready");
+                        }
+                        if (choice==3)
+                        {
+                            System.out.println(rmi.WhereIam(CL.getName()));
+                        }
+                         if (choice==4)
+                        {
+                            CL.MyMooves(rmi, CL);
+                        }
                     }
                 }
                 else if(rtr==2)

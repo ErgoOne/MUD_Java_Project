@@ -16,4 +16,8 @@ public interface GServerInt extends Remote{
     public String ShowPofDung (int NDung) throws RemoteException;
     public int ExitDung (int Ndung, String NomJ) throws RemoteException;
     public String GetDunMap (String NomJ, String NomD) throws RemoteException;
+    public int IsDungComplete (String NomD) throws RemoteException;
+    public String WhereIam (String NomJ) throws RemoteException;
+    public int MaxValDungMap (String NomD) throws RemoteException;
+    public int SwitchRoom (String NomD, String NomJ, int x, int y) throws RemoteException;
 }

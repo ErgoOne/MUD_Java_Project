@@ -5,12 +5,15 @@
  */
 package ProjectPackage;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Badr
  */
 public class Room {
     String NomR;
+    public ArrayList<Player> RoomPlayers = new ArrayList<>();
 
     public Room(String NomR) {
         this.NomR = NomR;
@@ -24,4 +27,16 @@ public class Room {
         this.NomR = NomR;
     }
     
+    public void AddPlayer(Player P)
+    {
+    RoomPlayers.add(P);
+    }
+    public void DelPlayer (Player P)
+    {
+    for (int i=0; i<RoomPlayers.size(); i++)
+    {
+        if(RoomPlayers.get(i).getNomJ().equals(P.getNomJ()))
+            RoomPlayers.remove(i);
+    }
+    }
 }
