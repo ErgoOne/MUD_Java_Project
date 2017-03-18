@@ -34,9 +34,11 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
             Registry reg = LocateRegistry.createRegistry(1010);
             //Naming.rebind("rmi://127.0.0.1:1099/server", reg);
             GameServer GS = new GameServer();
-            reg.rebind("rmi://127.0.0.78:1010/server", GS);
+            //MsgServer MS = new MsgServer(MS);
+            reg.rebind("rmi://127.0.0.78:1010/server", GS);       
             System.out.println("Server started ! ");
             GS.CreateDung();
+            GS.test();
         } catch (Exception e) {
             System.out.println(" Catch GS main  : "+ e);
             }
@@ -44,6 +46,10 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
 
     // Demande de connexion d'un joueur avec son pseudo 
     // + Verif d'existance du pseudo
+    public void test ()
+    {
+        Dungs.get(0).DMap[1][1].Msg.add("HELLO");
+    }
     public int ConnectToServ(String nomJ) throws RemoteException {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     int rtr=0;
@@ -329,6 +335,24 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
             }
         }
         return 0;
+    }
+
+
+    public Room GetRoom(String NomR, String NomD) throws RemoteException {
+         String[] parts = NomR.split(",");
+            String part1 = parts[0]; // x
+            String part2 = parts[1]; //y
+            int x = Integer.parseInt(part1);
+            int y = Integer.parseInt(part2);
+        for(int i=0; i<Dungs.size(); i++)
+        {
+            if(Dungs.get(i).NomD.equals(NomD))
+            {
+                return Dungs.get(i).DMap[x][y];
+            }
+        }
+        
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
  

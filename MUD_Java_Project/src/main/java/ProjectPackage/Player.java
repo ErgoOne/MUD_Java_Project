@@ -5,11 +5,13 @@
  */
 package ProjectPackage;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Badr
  */
-public class Player {
+public class Player implements Serializable{
     private String NomJ;
     private int Pvie;
 

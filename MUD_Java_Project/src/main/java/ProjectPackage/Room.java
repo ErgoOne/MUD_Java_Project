@@ -5,15 +5,17 @@
  */
 package ProjectPackage;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  * @author Badr
  */
-public class Room {
+public class Room implements Serializable{
     String NomR;
     public ArrayList<Player> RoomPlayers = new ArrayList<>();
+    public ArrayList<String> Msg = new ArrayList<>();
 
     public Room(String NomR) {
         this.NomR = NomR;
@@ -41,5 +43,19 @@ public class Room {
         if(RoomPlayers.get(i).getNomJ().equals(P.getNomJ()))
             RoomPlayers.remove(i);
     }
+    }
+    
+    public synchronized String GiveAllMsg()
+    {
+        String rtr="";
+    for (int i=0; i<Msg.size(); i++)
+    {
+        rtr= rtr +" - "+Msg.get(i);
+    }
+    return rtr;
+    }
+    public void WrtieMsg(String msg)
+    {
+    Msg.add(msg);
     }
 }

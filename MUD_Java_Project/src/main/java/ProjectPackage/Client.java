@@ -6,6 +6,7 @@
 package ProjectPackage;
 
 import java.net.MalformedURLException;
+import java.rmi.AccessException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RMISecurityManager;
@@ -20,11 +21,42 @@ import java.util.logging.Logger;
  *
  * @author Badr
  */
+
+class MsgThread extends Thread
+{
+    GServerInt rmi;
+    Client CL;
+ public MsgThread (Client C, GServerInt r)
+ {
+     rmi = r;
+     CL = C;
+ }
+    @Override
+    public void run() {
+        System.out.println("DANS LE RUN");
+        try {
+            System.out.println("THREAD"+this.rmi.GetRoom(this.rmi.WhereIam(this.CL.getName()), Integer.toString(this.CL.getMyDung())).GiveAllMsg());
+              
+        } catch (RemoteException ex) {
+            Logger.getLogger(MsgThread.class.getName()).log(Level.SEVERE, null, ex);
+        }
+          
+       
+      
+       
+	}
+
+
+}
 public class Client {
 private String name;
 private int RefChat;
 private int MyDung;
 
+public void WriteMsg()
+{
+
+}
     public int getMyDung() {
         return MyDung;
     }
@@ -104,6 +136,7 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
             System.out.println("~ORDERS~ To see the stat of the game Please press 2 :");
             System.out.println("~ORDERS~ To see Where I am press 3 :");
             System.out.println("~ORDERS~ To moove to other room press 4 :");
+            System.out.println("~ORDERS~ MSG 5 :");
             /* System.out.println("~ORDERS~ To see players of a precise Dungeon press 3 :");*/
             System.out.println("~ORDERS~ To exit the Dung please press 98 :");
     }
@@ -181,6 +214,7 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
              }
              }
              
+             
     }
   public static void main(String[] args) throws NotBoundException {
       GServerInt rmi;
@@ -253,6 +287,11 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
                         {
                             CL.MyMooves(rmi, CL);
                         }
+                         if (choice==5)
+                         {
+                         MsgThread t1 = new MsgThread(CL,rmi);
+                         t1.start();
+                         }
                     }
                 }
                 else if(rtr==2)
