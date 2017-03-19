@@ -32,7 +32,7 @@ public class MsgServer extends UnicastRemoteObject implements MServerInt {
             Registry reg = LocateRegistry.createRegistry(2020);
             MsgServer MS = new MsgServer();
             
-            reg.rebind("rmi://127.0.0.78:2020/server", MS);
+            reg.rebind("rmi://127.0.0.79:2020/server", MS);
             System.out.println("MSG Server started ! ");
         } catch (Exception e) {
             System.out.println(" Catch MS main  : "+ e);
@@ -46,11 +46,12 @@ public class MsgServer extends UnicastRemoteObject implements MServerInt {
        }
     }
 
-    public String GetNewMsgs(String nomJ, String NomR) throws RemoteException {
+    public String GetNewMsgs(String nomJ, Room R) throws RemoteException {
         String rtr=null;
+        System.out.println("ON EST AL");
         if(1==1)
         {
-            return rtr;
+            return R.GiveAllMsg();
         }
         else
             

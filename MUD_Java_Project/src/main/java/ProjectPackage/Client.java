@@ -26,6 +26,7 @@ class MsgThread extends Thread
 {
     GServerInt rmi;
     Client CL;
+    public int size;
  public MsgThread (Client C, GServerInt r)
  {
      rmi = r;
@@ -34,10 +35,20 @@ class MsgThread extends Thread
     @Override
     public void run() {
         System.out.println("DANS LE RUN");
+        MServerInt rmiMSG;
+        String rtr="";
         try {
-            System.out.println("THREAD"+this.rmi.GetRoom(this.rmi.WhereIam(this.CL.getName()), Integer.toString(this.CL.getMyDung())).GiveAllMsg());
-              
+            Registry regMsg = LocateRegistry.getRegistry("127.0.0.79", 2020);
+            
+            //LocateRegistry.createRegistry(1099);
+             rmiMSG = (MServerInt) regMsg.lookup("rmi://127.0.0.79:2020/server");
+            //System.out.println("THREAD"+this.rmi.GetRoom(this.rmi.WhereIam(this.CL.getName()), Integer.toString(this.CL.getMyDung())).GiveAllMsg());
+            rtr=rmiMSG.GetNewMsgs(CL.getName(), this.rmi.GetRoom(this.rmi.WhereIam(this.CL.getName()), Integer.toString(this.CL.getMyDung())));
+            System.out.println("THREAD : "+rtr);
+            //System.out.println("Taille : " +this.rmi.GetRoom(this.rmi.WhereIam(this.CL.getName()),Integer.toString(this.CL.getMyDung())).Msg.size());
         } catch (RemoteException ex) {
+            Logger.getLogger(MsgThread.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotBoundException ex) {
             Logger.getLogger(MsgThread.class.getName()).log(Level.SEVERE, null, ex);
         }
           

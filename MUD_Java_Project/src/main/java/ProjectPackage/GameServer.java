@@ -340,6 +340,7 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
 
     public Room GetRoom(String NomR, String NomD) throws RemoteException {
          String[] parts = NomR.split(",");
+         System.out.println("GET ROOM : "+NomR);
             String part1 = parts[0]; // x
             String part2 = parts[1]; //y
             int x = Integer.parseInt(part1);
