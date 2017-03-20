@@ -176,7 +176,7 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
             System.out.println("~ORDERS~ To see players of a precise Dungeon press 3 :");
             System.out.println("~ORDERS~ To exit the game press 99 :");
     }
-    public  void ShowDungOrders (GServerInt rmi, Client CL, MsgGetThread t1 ) throws RemoteException {
+    public  int ShowDungOrders (GServerInt rmi, Client CL, MsgGetThread t1 ) throws RemoteException {
             String MyPosition = rmi.WhereIam(CL.getName());
             String[] parts = MyPosition.split(",");
             String part1 = parts[0]; // x
@@ -184,10 +184,18 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
             int x = Integer.parseInt(part1);
             int y = Integer.parseInt(part2);
             int r=rmi.IsRoomEmpty(x, y, Integer.toString(CL.getMyDung()));
+            int m=rmi.IsMonsterAlive(Integer.toString(CL.getMyDung()), x, y);
             if(r==1)
             {
             System.out.println("~CAUTION~ You're not alone in this room ! ");
             
+            }
+            if(m!=0) // Battle ou fuite
+            {
+            int pvM=rmi.IsMonsterAlive(Integer.toString(CL.getMyDung()), x, y);
+            System.out.println("~CAUTION~ The monster is alive with "+pvM+" ! what you want to do ? ");
+            int rtr =CL.MonsterIsHere(rmi, CL);
+            if(rtr==0) return 0;
             }
             System.out.println("~ORDERS~ To display the Dungeon's Map Please press 1 :");
             System.out.println("~ORDERS~ To see the stat of the game Please press 2 :");
@@ -197,6 +205,7 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
             {System.out.println("~ORDERS~ To Send message to the room press 5:");}
             /* System.out.println("~ORDERS~ To see players of a precise Dungeon press 3 :");*/
             System.out.println("~ORDERS~ To exit the Dung please press 98 :");
+            return 1;
     }
     public void MyMooves (GServerInt rmi, Client CL) throws RemoteException{
     
@@ -311,7 +320,20 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
                     System.out.println("mydun :" +CL.MyDung);
                     while (choice != 8)
                     {
-                        CL.ShowDungOrders(rmi, CL, t1);
+                        int back =CL.ShowDungOrders(rmi, CL, t1);
+                        if (back==0)
+                        {
+                            System.out.println("~INFO~ Partie terminé Merci d'avoir joué ! ");
+                            String wiam= rmi.WhereIam(CL.getName());
+                            String[] parts = wiam.split(",");
+                            String part1 = parts[0]; // x
+                            String part2 = parts[1]; //y
+                            int x = Integer.parseInt(part1);
+                            int y = Integer.parseInt(part2);
+                            rmi.DeletePlayer(CL.getName(), Integer.toString(CL.getMyDung()), x, y);
+                            System.exit(0);
+                            
+                        }
                         choice = sc.nextInt();
                         if(choice ==98)
                         {
@@ -382,7 +404,78 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
         Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
     }
 }
+ 
+  public int MonsterIsHere(GServerInt rmi, Client CL) throws RemoteException
+  {
+        System.out.println("~Order~ If you wan't to escape you'll loose 2 points from your total life ! ");
+        System.out.println("~Order~ Press 1 to escape ");
+        System.out.println("~Order~ Press 2 to fight ! ");
+        Scanner sc = new Scanner(System.in);
+        int choice = sc.nextInt();
+        if(choice==1)
+        {
+            CL.MyMooves(rmi, CL);
+        }
+        else if (choice==2)
+        {
+        int rtr =CL.FightMonster(CL,rmi);
+        if(rtr==0) return 0;
+        }
+              
+        return 1;
   
+  }
+  public int FightMonster(Client CL,GServerInt rmi) throws RemoteException
+  {
+    int fuir=0; //NOK
+    int tour=1;
+    Scanner sc = new Scanner(System.in);
+    
+    int choice = (int) (Math.random() * 2 ); // 0 le Jr win 1 le monstre win
+    while (fuir==0)
+    {
+    if(choice==0)
+    {
+        
+        
+        String wiam= rmi.WhereIam(CL.getName());
+        String[] parts = wiam.split(",");
+        String part1 = parts[0]; // x
+        String part2 = parts[1]; //y
+        int x = Integer.parseInt(part1);
+        int y = Integer.parseInt(part2);
+        
+        
+        int pvM=rmi.MonsterAttacked(Integer.toString(CL.getMyDung()), x,y);
+        System.out.println("Tour numero "+tour+ " Le monstre à perdu 1 PV ! ");
+        System.out.println("Il ne lui reste que "+pvM+" PV !");
+        if(rmi.GetMonsterPv(Integer.toString(CL.getMyDung()), x, y)<=0)
+        {
+        fuir=0;
+        System.out.println("~Info~ Vous avez tué le monstre !");
+        return 3;// monstre dead;
+        }
+    }
+    else if(choice==1)
+    {
+        
+        System.out.println("Tour numero "+tour+ " Vous avez perdu 1 PV ! ");
+        rmi.PlayerAttacked(CL.getName(), 1);
+        System.out.println("~Info~ Il ne vous reste que : "+rmi.MyLife(CL.getName())+" PV !");
+        if(rmi.MyLife(CL.getName())==0)
+                {
+                    System.out.println("Vous etes Mort ! ");
+                    return 0;// Player dead
+                }
+    }
+    choice = (int) (Math.random() * 2 );
+        System.out.println("~Order~ Voulez vous continuer à vous battre ou fuir ? 1 pour continuer, 2 pour fuir! ");
+        fuir=sc.nextInt();
+        if(fuir!=2) {fuir=0;}
+        tour++;
+    }
+    return 1; // jamais !
+  }
   
 
 }

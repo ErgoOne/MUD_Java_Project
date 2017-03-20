@@ -14,11 +14,13 @@ import java.util.ArrayList;
  */
 public class Room implements Serializable{
     String NomR;
+    Monster m;
     public ArrayList<Player> RoomPlayers = new ArrayList<>();
     public ArrayList<String> Msg = new ArrayList<>();
 
     public Room(String NomR) {
         this.NomR = NomR;
+        m=new Monster();
     }
 
     public String getNomR() {

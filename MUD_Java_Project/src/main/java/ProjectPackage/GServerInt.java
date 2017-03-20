@@ -25,4 +25,10 @@ public interface GServerInt extends Remote{
     public  int WriteMsg(String Msg, String NomJ, int x,int y, String NomD) throws RemoteException;
     public  String GetNewMsgs(String nomJ,String NomD, int x, int y, int size) throws RemoteException;
     public int Getsize(String NomD, int x, int y) throws RemoteException;
+    public int IsMonsterAlive(String NomD, int x, int y) throws RemoteException;
+    public void PlayerAttacked(String NomJ, int damage) throws RemoteException;
+    public int MonsterAttacked(String NomD, int x, int y) throws RemoteException;
+    public int GetMonsterPv(String NomD, int x, int y) throws RemoteException;
+    public int MyLife(String NomJ) throws RemoteException;
+    public void DeletePlayer(String NomJ, String NomD, int x, int y) throws RemoteException;
 }

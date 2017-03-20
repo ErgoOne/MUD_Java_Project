@@ -27,7 +27,7 @@ public class Player implements Serializable{
     
     public Player(String NomJ) {
         this.NomJ = NomJ;
-  
+        this.Pvie=10;
     }
     
     public String getNomJ() {

@@ -411,5 +411,97 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
         }
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public int IsMonsterAlive(String NomD, int x, int y) throws RemoteException {
+        for(int i=0; i<Dungs.size();i++)
+        {
+            if(Dungs.get(i).getNomD().equals(NomD))
+            {
+            return Dungs.get(i).DMap[x][y].m.getPv();
+            }
+        }
+        
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    
+    public void PlayerAttacked(String NomJ, int damage) throws RemoteException {
+       for(int i=0; i<Players.size();i++)
+        {
+            if(Players.get(i).getNomJ().equals(NomJ))
+            { Players.get(i).setPvie( (Players.get(i).getPvie())-damage); }
+        }
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+   
+    @Override
+    public int MonsterAttacked(String NomD, int x, int y) throws RemoteException {
+        for(int i=0; i<Dungs.size();i++)
+        {
+            if(Dungs.get(i).getNomD().equals(NomD))
+            {
+                int pv=Dungs.get(i).DMap[x][y].m.getPv();
+                System.out.println("PV DU MONSTE : "+pv);
+                pv=pv-1;
+                if(pv<0) {pv=0;}
+                Dungs.get(i).DMap[x][y].m.setPv(pv);
+                return Dungs.get(i).DMap[x][y].m.getPv();
+            }
+        }
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int MyLife(String NomJ) throws RemoteException {
+        for(int i=0; i<Players.size();i++)
+        {
+            if(Players.get(i).getNomJ().equals(NomJ))
+                return Players.get(i).getPvie();
+        }
+        
+        throw new UnsupportedOperationException("Mylife() => Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int GetMonsterPv(String NomD, int x, int y) throws RemoteException {
+         for(int i=0; i<Dungs.size();i++)
+        {
+            if(Dungs.get(i).getNomD().equals(NomD))
+            {
+                return Dungs.get(i).DMap[x][y].m.getPv();
+            }
+        
+        }
+        
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void DeletePlayer(String NomJ, String NomD, int x, int y) throws RemoteException {
+
+        for(int i=0; i<Dungs.size();i++)
+        {
+        if(Dungs.get(i).getNomD().equals(NomD))
+        {
+           for(int j=0; j<Dungs.get(i).DungPlayers.size();j++)
+           {
+               if(Dungs.get(i).DungPlayers.get(j).getNomJ().equals(NomJ))
+               {
+                Dungs.get(i).DungPlayers.remove(j);
+               }
+           }
+           for (int k=0; k<Dungs.get(i).DMap[x][y].RoomPlayers.size(); k++)
+           {
+               if(Dungs.get(i).DMap[x][y].RoomPlayers.get(k).getNomJ().equals(NomJ))
+               {
+                   Dungs.get(i).DMap[x][y].RoomPlayers.remove(k);
+               }
+           }
+        }
+        }
+        System.out.println("Player "+NomJ+" Deleted From the server !");
+    }
 }
  
