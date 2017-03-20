@@ -31,4 +31,6 @@ public interface GServerInt extends Remote{
     public int GetMonsterPv(String NomD, int x, int y) throws RemoteException;
     public int MyLife(String NomJ) throws RemoteException;
     public void DeletePlayer(String NomJ, String NomD, int x, int y) throws RemoteException;
+    public String WhoIsInMyRoom(String NomJ, String NomD, int x, int y) throws RemoteException;
+    public void GiveLife(int whois, String NomJ,String NomD, int x, int y)throws RemoteException;
 }

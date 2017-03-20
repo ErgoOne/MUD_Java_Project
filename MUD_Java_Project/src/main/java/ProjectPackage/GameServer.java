@@ -90,7 +90,7 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
         }
         else if (Players.isEmpty())
         {
-            System.out.println("Ajout du joueur : tableau empty");
+            //System.out.println("Ajout du joueur : tableau empty");
             Player tmp = new Player(nomJ);
                         Players.add(tmp);
                            return 1;
@@ -128,7 +128,7 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
           
            Dungeon tmp =new Dungeon(Integer.toString(size+1));
            Dungs.add(tmp);
-           System.out.println("Size : " + size +"Creation of a new Dungeon : " +tmp.getNomD());
+           System.out.println("#Creation of a new Dungeon Number : " +tmp.getNomD());
            tmp.InitDungMap();
         
         }
@@ -150,8 +150,8 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
     public int ChooseDung(int NDung, String NomJ) throws RemoteException {
         //System.out.println("PLPLP : "+Dungs.get(NDung).getNPlayers());
                 int np=Dungs.get(NDung-1).getNPlayers();
-        System.out.println("NDung Given : "+NDung );
-        System.out.println("ProjectPackage.GameServer.ChooseDung() Dungs size : "+Dungs.size() );
+        //System.out.println("NDung Given : "+NDung );
+       // System.out.println("ProjectPackage.GameServer.ChooseDung() Dungs size : "+Dungs.size() );
         if (NDung > Dungs.size()) 
         {return 2;}
         else if(np==4)
@@ -160,9 +160,9 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
         {
             for (int i = 0; i < Players.size(); i++) {
                 if(Players.get(i).getNomJ().equals(NomJ)){
-                    System.out.println("Adding Player"+Players.get(i)+ " to Ndung number :"+(NDung));
+                   // System.out.println("Adding Player"+Players.get(i)+ " to Ndung number :"+(NDung));
                     Dungs.get(NDung-1).addPlayer(Players.get(i));
-                    Dungs.get(NDung-1).DMap[1][1].AddPlayer(Players.get(i));
+                    Dungs.get(NDung-1).DMap[0][0].AddPlayer(Players.get(i));
                     int j = Dungs.get(NDung-1).getNPlayers();
                     if (j==3)
                     {
@@ -277,7 +277,7 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
         for (int i = 0; i < Dungs.size(); i++) {
         if(Dungs.get(i).NomD.equals(NomD))
         {
-            System.out.println("MAX :" +Dungs.get(i).getX());
+            //System.out.println("MAX :" +Dungs.get(i).getX());
             return Dungs.get(i).getX();
         }
             
@@ -289,10 +289,10 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
         System.out.println("##SwitchRoom de "+NomJ+ " Destination "+x+","+y);
         
          for (int i = 0; i < Dungs.size(); i++) {
-             System.out.println("NomD Geti "+Dungs.get(i).NomD);
+             //System.out.println("NomD Geti "+Dungs.get(i).NomD);
         if(Dungs.get(i).NomD.equals(NomD))
             for (int j = 0; j < Players.size(); j++) {
-                System.out.println("NomJ geti "+Players.get(j).getNomJ()+" NomJGiven "+NomJ);
+               // System.out.println("NomJ geti "+Players.get(j).getNomJ()+" NomJGiven "+NomJ);
                 if(Players.get(j).getNomJ().equals(NomJ))
                 {
                     
@@ -301,12 +301,12 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
                             for (int o=0;o<Dungs.get(i).DMap[h][k].RoomPlayers.size();o++){
                                 if(Dungs.get(i).DMap[h][k].RoomPlayers.get(o).getNomJ().equals(NomJ))
                                 {
-                                    System.out.println("NomJ a changer de room : "+Dungs.get(i).DMap[h][k].RoomPlayers.get(o).getNomJ()+" Position :" +h+" , "+k);
+                                    //System.out.println("NomJ a changer de room : "+Dungs.get(i).DMap[h][k].RoomPlayers.get(o).getNomJ()+" Position :" +h+" , "+k);
                                     
                                     Dungs.get(i).DMap[h][k].RoomPlayers.remove(o);
-                                System.out.println("PLayer removed from room "+Dungs.get(i).DMap[h][k].getNomR());
+                               // System.out.println("PLayer removed from room "+Dungs.get(i).DMap[h][k].getNomR());
                                 int p = Dungs.get(i).DMap[x][y].AddPlayer(Players.get(j));
-                                System.out.println("PLayer added to room "+Dungs.get(i).DMap[x][y].getNomR());
+                                //System.out.println("PLayer added to room "+Dungs.get(i).DMap[x][y].getNomR());
                                 return p;
                                 }
                             }
@@ -365,10 +365,10 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
             if(Dungs.get(i).NomD.equals(NomD))
             {
                 String msg=NomJ+":"+Msg;
-                System.out.println("Ajout du message :--"+msg+" -- Dnas la room : "+Dungs.get(i).DMap[x][y].getNomR());
-                System.out.println("Le size avant est : "+Dungs.get(i).DMap[x][y].Msg.size());
+                System.out.println("#Ajout du message :--"+msg+" -- Dnas la room : "+Dungs.get(i).DMap[x][y].getNomR());
+               // System.out.println("Le size avant est : "+Dungs.get(i).DMap[x][y].Msg.size());
                 Dungs.get(i).DMap[x][y].Msg.add(msg);
-                System.out.println("Le size mntnt est : "+Dungs.get(i).DMap[x][y].Msg.size());
+               // System.out.println("Le size mntnt est : "+Dungs.get(i).DMap[x][y].Msg.size());
                 return Dungs.get(i).DMap[x][y].Msg.size();
             }
         }
@@ -376,11 +376,11 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
         return 0;
         
 }
-    
+   
     public  String GetNewMsgs(String nomJ,String NomD, int x, int y, int size) throws RemoteException {
         String rtr=null;
         
-        System.out.println("GetNEWmsgs");
+        System.out.println("#GetNEWmsgs pour le joueur : "+nomJ);
         if(1==1)
         {
             for(int i=0;i<Dungs.size();i++)
@@ -388,7 +388,7 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
                 if(Dungs.get(i).getNomD().equals(NomD))
                 {
                    rtr=Dungs.get(i).DMap[x][y].GiveAllMsg(nomJ, size); 
-                   System.out.println("Getnewmsg pr la room : "+Dungs.get(i).DMap[x][y].getNomR()+"rtr : "+rtr+"Pour le joueur :"+nomJ );
+                   //System.out.println("Getnewmsg pr la room : "+Dungs.get(i).DMap[x][y].getNomR()+"rtr : "+rtr+"Pour le joueur :"+nomJ );
                 }
             }
             
@@ -443,7 +443,7 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
             if(Dungs.get(i).getNomD().equals(NomD))
             {
                 int pv=Dungs.get(i).DMap[x][y].m.getPv();
-                System.out.println("PV DU MONSTE : "+pv);
+                System.out.println("#PV DU MONSTRE : "+pv+" De la room :"+Dungs.get(i).DMap[x][y].getNomR());
                 pv=pv-1;
                 if(pv<0) {pv=0;}
                 Dungs.get(i).DMap[x][y].m.setPv(pv);
@@ -501,7 +501,58 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
            }
         }
         }
-        System.out.println("Player "+NomJ+" Deleted From the server !");
+        System.out.println("#Player "+NomJ+" Deleted From the server !");
+    }
+
+    @Override
+    public String WhoIsInMyRoom(String NomJ, String NomD, int x, int y) throws RemoteException {
+       String rtr="";
+       String hash="";
+        for (int i=0; i<Dungs.size(); i++)
+        {
+            if(Dungs.get(i).getNomD().equals(NomD))
+            {
+                for (int j=0; j<Dungs.get(i).DMap[x][y].RoomPlayers.size(); j++)
+                {
+                    hash="Palyer :"+Dungs.get(i).DMap[x][y].RoomPlayers.get(j).getNomJ()+" With : "+Dungs.get(i).DMap[x][y].RoomPlayers.get(i).getPvie()+" PV";
+                    rtr=hash+"\n"+rtr;
+                }
+            }
+        }
+        return rtr;
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void GiveLife(int whois, String NomJ, String NomD, int x, int y) throws RemoteException {
+        
+        if(whois==1) // PLAYER
+        {
+            for(int i=0; i<Players.size(); i++)
+            {
+                if(Players.get(i).getNomJ().equals(NomJ))
+                {
+                    Players.get(i).setPvie((Players.get(i).getPvie())+2);
+                }
+            }
+            
+        }
+        else if(whois==2) // MONSTRE
+        {
+            for(int j=0; j<Dungs.size();j++)
+            {
+                for(int g=0; g<Dungs.size();g++)
+                {
+                if(Dungs.get(j).DMap[x][y].RoomPlayers.get(g).getNomJ().equals(NomJ))
+                {
+                    Dungs.get(j).DMap[x][y].m.setPv((Dungs.get(j).DMap[x][y].m.getPv())+2);
+                }
+                    
+                    }
+            }
+        
+        }
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
  

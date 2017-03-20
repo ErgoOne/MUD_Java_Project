@@ -33,18 +33,24 @@ public class Dungeon {
     public void InitDungMap()
     {
         String Rname;
-        System.out.println("Trying to create the map");
+        System.out.println("#Trying to create the map");
         for (int i=0;i<5;i++)
         {
             for(int j=0;j<5;j++)
             {
                 Rname=Integer.toString(i);
                 Rname=Rname+","+Integer.toString(j);
-                System.out.println("Rname : "+Rname);
+                //System.out.println("Rname : "+Rname);
                 DMap[i][j]= new Room(Rname);
+                if (i==0 && j==0)
+                {
+                    //System.out.println("ProjectPackage.Dungeon.InitDungMap() DANS LE IF DE DUNG");
+                    DMap[i][j].m.setPv(0);
+                    //System.out.println("ProjectPackage.Dungeon.InitDungMap() DANS LE IF DE DUNG : "+DMap[i][j].m.getPv());
+                }
             }
         }
-        System.out.println("#Creation of the Map OK for the Dung:");
+        System.out.println("#Creation of the Map OK for the Dung");
        // System.out.println(Arrays.deepToString(DMap));
         /* for(Room[] row : DMap) {
             printRow(row);
@@ -105,7 +111,7 @@ public class Dungeon {
         String Newligne=System.getProperty("line.separator");
         String tmp = "";
         for (int i = 0; i < DungPlayers.size(); i++) {
-                tmp = "~ " +DungPlayers.get(i).getNomJ()+ Newligne + tmp;
+                tmp = "~Player~ " +DungPlayers.get(i).getNomJ()+" With : "+DungPlayers.get(i).getPvie()+" PV " + Newligne + tmp;
 		}
         return tmp;
     }

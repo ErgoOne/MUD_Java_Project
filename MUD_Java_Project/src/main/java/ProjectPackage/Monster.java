@@ -16,6 +16,10 @@ public class Monster {
     public Monster() {
         this.Pv=5;
     }
+    public Monster(int pv)
+    {
+    this.Pv=pv;
+    }
 
     public void setPv(int Pv) {
         this.Pv = Pv;

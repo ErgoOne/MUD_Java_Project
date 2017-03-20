@@ -18,9 +18,14 @@ public class Room implements Serializable{
     public ArrayList<Player> RoomPlayers = new ArrayList<>();
     public ArrayList<String> Msg = new ArrayList<>();
 
-    public Room(String NomR) {
-        this.NomR = NomR;
-        m=new Monster();
+    public Room(String Nomr) {
+        
+        this.NomR = Nomr;
+        if(Nomr.equals("0,0"))
+        {m=new Monster(0);
+            //System.out.println("ProjectPackage.Room.<init>() DANS LE IF");
+        }
+       else {m=new Monster();}
     }
 
     public String getNomR() {
@@ -55,7 +60,7 @@ public class Room implements Serializable{
     {
         String[] parts = Msg.get(i).split(":");
             String part1 = parts[0]; // x
-            System.out.println("=>Room Giveallmsg Nomj: "+part1+"i:"+i);
+            //System.out.println("=>Room Giveallmsg Nomj: "+part1+"i:"+i);
             if(!part1.equals(nomJ))
                 //if(1==1)
             {
