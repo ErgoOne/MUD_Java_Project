@@ -325,6 +325,7 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
                 if (rtr==1)
                 {
                     System.out.println("~OK~ You are on Dungeon number : "+selection);
+                    t1.start();
                     CL.MyDung=selection;
                     
                     //.out.println("mydun :" +CL.MyDung);
@@ -348,7 +349,7 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
                         if(choice ==98)
                         {
                             //System.out.println("in the if 98");
-                            t1 = null;
+                            //t1 = null;
                             rtr=0;
                             rtr=rmi.ExitDung(CL.MyDung, CL.getName());
                             //System.out.println("after the rmi. rtr =" +rtr);
