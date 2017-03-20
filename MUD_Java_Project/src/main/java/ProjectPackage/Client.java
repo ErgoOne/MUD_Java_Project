@@ -326,7 +326,7 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
                 {
                     System.out.println("~OK~ You are on Dungeon number : "+selection);
                     CL.MyDung=selection;
-                    t1.start();
+                    
                     //.out.println("mydun :" +CL.MyDung);
                     while (choice != 8)
                     {
@@ -348,6 +348,7 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
                         if(choice ==98)
                         {
                             //System.out.println("in the if 98");
+                            t1 = null;
                             rtr=0;
                             rtr=rmi.ExitDung(CL.MyDung, CL.getName());
                             //System.out.println("after the rmi. rtr =" +rtr);
@@ -360,21 +361,21 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
                         {
                             String print;
                         print = rmi.GetDunMap(CL.getName(), Integer.toString(CL.MyDung));
-                            //System.out.println(print);
+                            System.out.println(print);
                         }
                         if (choice==2)
                         {
                             int i;
                             System.out.println(rmi.ShowPofDung(CL.MyDung));
                             i=rmi.IsDungComplete(Integer.toString(CL.MyDung));
-                            if (i==2)
+                            /*if (i==2)
                                 System.out.println("~OK~ Wainting for players");
                             else 
-                                System.out.println("~OK~ Game is ready");
+                                System.out.println("~OK~ Game is ready");*/
                         }
                         if (choice==3)
                         {
-                            System.out.println(rmi.WhereIam(CL.getName()));
+                            System.out.println("~Info~ You are in the room : "+rmi.WhereIam(CL.getName()));
                         }
                          if (choice==4)
                         {
@@ -423,8 +424,10 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
                 CL.ShowOrders();
             }
           }
+          //rmi.DeletePlayer(CL.getName(), CL.getMyDung(), rtr, rtr);
+          rmi.SimpleDeletePlayer(CL.getName());
           System.out.println("Good bye..");
-
+          
       } catch (RemoteException ex) {
         Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
     }
@@ -491,12 +494,13 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
         
         System.out.println("Tour numero "+tour+ " Vous avez perdu 1 PV ! ");
         rmi.PlayerAttacked(CL.getName(), 1);
-        System.out.println("~Info~ Il ne vous reste que : "+rmi.MyLife(CL.getName())+" PV !");
         if(rmi.MyLife(CL.getName())==0)
                 {
                     System.out.println("Vous etes Mort ! ");
                     return 0;// Player dead
                 }
+        System.out.println("~Info~ Il ne vous reste que : "+rmi.MyLife(CL.getName())+" PV !");
+        
     }
     choice = (int) (Math.random() * 2 );
         System.out.println("~Order~ Voulez vous continuer à vous battre ou fuir ? 1 pour continuer, 2 pour fuir! ");

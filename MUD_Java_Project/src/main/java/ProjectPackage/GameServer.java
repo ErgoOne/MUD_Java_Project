@@ -10,6 +10,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Vector;
 /**
@@ -73,6 +74,7 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
         if (!Players.isEmpty())
         {
         for (int i = 0; i < Players.size() ; i++) {
+                System.out.println("ProjectPackage.GameServer.Addplayer()"+Players.get(i).getNomJ()+"nomj :"+nomJ);
                 if (nomJ.equals(Players.get(i).getNomJ()))
                         {
                         System.out.println("~Name already exists");
@@ -196,7 +198,7 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
             System.out.println("Sur dung : "+Dungs.get(i).getNomD());
             if(Dungs.get(i).getNomD().equals(Integer.toString(Ndung)))
             {
-                for (int j = 0; j < Dungs.size(); j++) {
+                for (int j = 0; j < Dungs.get(i).DungPlayers.size(); j++) {
                     System.out.println("NomJ du tab"+Dungs.get(i).DungPlayers.get(j).getNomJ());
                     if(Dungs.get(i).DungPlayers.get(j).getNomJ().equals(NomJ))
                     {
@@ -207,6 +209,14 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
                     }
                     
                 }
+                Iterator<Player> itr = Dungs.get(i).DungPlayers.iterator();
+            
+            while(itr.hasNext()) {
+                Player p = itr.next();
+                if(p.getNomJ().equals(NomJ)){
+                    itr.remove();
+                }
+            }
             }
         }
         return 0;
@@ -484,22 +494,39 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
         for(int i=0; i<Dungs.size();i++)
         {
         if(Dungs.get(i).getNomD().equals(NomD))
-        {
+        { System.out.println("if1");
            for(int j=0; j<Dungs.get(i).DungPlayers.size();j++)
            {
                if(Dungs.get(i).DungPlayers.get(j).getNomJ().equals(NomJ))
-               {
+               {System.out.println("if2");
                 Dungs.get(i).DungPlayers.remove(j);
                }
            }
            for (int k=0; k<Dungs.get(i).DMap[x][y].RoomPlayers.size(); k++)
            {
                if(Dungs.get(i).DMap[x][y].RoomPlayers.get(k).getNomJ().equals(NomJ))
-               {
+               {System.out.println("if3");
                    Dungs.get(i).DMap[x][y].RoomPlayers.remove(k);
                }
            }
         }
+/*        for (int h=0; h<Players.size();h++)
+        {
+            if(Players.get(h).getNomJ().equals(NomJ))
+            {System.out.println("if4");
+                Players.remove(h);
+                
+            }
+        }*/
+            Iterator<Player> itr = Players.iterator();
+            
+            while(itr.hasNext()) {
+                Player p = itr.next();
+                
+                if(p.getNomJ().equals(NomJ)){
+                    itr.remove();
+                }
+            }
         }
         System.out.println("#Player "+NomJ+" Deleted From the server !");
     }
@@ -553,6 +580,22 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
         
         }
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void SimpleDeletePlayer(String NomJ) throws RemoteException {
+        Iterator<Player> itr = Players.iterator();
+            
+            while(itr.hasNext()) {
+                Player p = itr.next();
+                
+                if(p.getNomJ().equals(NomJ)){
+                    itr.remove();
+                }
+        
+       // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+            System.out.println("#Simple Delete of : "+NomJ);
     }
 }
  
