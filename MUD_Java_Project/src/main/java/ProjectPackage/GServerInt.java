@@ -22,4 +22,7 @@ public interface GServerInt extends Remote{
     public int SwitchRoom (String NomD, String NomJ, int x, int y) throws RemoteException;
     public int IsRoomEmpty(int x, int y, String NomD) throws RemoteException;
     public Room GetRoom (String NomR, String NomD) throws RemoteException;
+    public  int WriteMsg(String Msg, String NomJ, int x,int y, String NomD) throws RemoteException;
+    public  String GetNewMsgs(String nomJ,String NomD, int x, int y, int size) throws RemoteException;
+    public int Getsize(String NomD, int x, int y) throws RemoteException;
 }

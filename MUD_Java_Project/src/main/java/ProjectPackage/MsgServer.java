@@ -46,12 +46,15 @@ public class MsgServer extends UnicastRemoteObject implements MServerInt {
        }
     }
 
-    public String GetNewMsgs(String nomJ, Room R) throws RemoteException {
+    public synchronized String GetNewMsgs(String nomJ, Room R, int size) throws RemoteException {
         String rtr=null;
-        System.out.println("ON EST AL");
+        
+        System.out.println("GetNEWmsgs");
         if(1==1)
         {
-            return R.GiveAllMsg();
+            rtr=R.GiveAllMsg(nomJ, size);
+            System.out.println("Getnewmsg pr la room : "+R.getNomR()+"rtr : "+rtr+"Pour le joueur :"+nomJ );
+            return rtr;
         }
         else
             
@@ -59,10 +62,14 @@ public class MsgServer extends UnicastRemoteObject implements MServerInt {
     return rtr;
     }
 
-    @Override
-    public int WriteMsg(String Msg, String NomJ) throws RemoteException {
+    //@Override
+    public synchronized int WriteMsg(String Msg, String NomJ, Room R) throws RemoteException {
+        String msg=NomJ+":"+Msg;
+        System.out.println("Ajout du message :--"+msg+" -- Dnas la room : "+R.NomR);
         
-        
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        R.Msg.add(msg);
+        System.out.println("Le size mntnt est : "+R.Msg.size());
+        return R.Msg.size();
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

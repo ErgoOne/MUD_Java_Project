@@ -45,14 +45,25 @@ public class Room implements Serializable{
     }
     }
     
-    public synchronized String GiveAllMsg()
+    public synchronized String GiveAllMsg(String nomJ, int s)
     {
-        String rtr="";
-    for (int i=0; i<Msg.size(); i++)
+        String rtr="~New Messages~";
+        int x=0;
+    for (int i=s-1; i<Msg.size(); i++)
     {
-        rtr= rtr +" - "+Msg.get(i);
-    }
-    return rtr;
+        String[] parts = Msg.get(i).split(":");
+            String part1 = parts[0]; // x
+            System.out.println("=>Room Giveallmsg Nomj: "+part1+"i:"+i);
+            if(!part1.equals(nomJ))
+                //if(1==1)
+            {
+                rtr= rtr +"\n"+Msg.get(i);
+                x++;
+            }
+            }
+    rtr=rtr+"\n"+"~End Of Messages~";
+    if(x!=0){return rtr;}
+    else return null;
     }
     public void WrtieMsg(String msg)
     {

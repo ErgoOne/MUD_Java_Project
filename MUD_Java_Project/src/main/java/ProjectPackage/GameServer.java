@@ -38,7 +38,7 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
             reg.rebind("rmi://127.0.0.78:1010/server", GS);       
             System.out.println("Server started ! ");
             GS.CreateDung();
-            GS.test();
+            //GS.test();
         } catch (Exception e) {
             System.out.println(" Catch GS main  : "+ e);
             }
@@ -242,13 +242,13 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
         }
 
     @Override
-    public String WhereIam(String NomJ) {
+    public synchronized String WhereIam(String NomJ) {
         String Position="ErRor";
         for (int i = 0; i < Dungs.size(); i++) {
             for (int j = 0; j < Dungs.get(i).DungPlayers.size(); j++) {
                 if (Dungs.get(i).DungPlayers.get(j).getNomJ().equals(NomJ))
                 {
-                    System.out.println("1er if "+i+","+j);
+                    //System.out.println("1er if "+i+","+j);
                    for (int x = 0; x <Dungs.get(i).getX() ; x++)
                    {//System.out.println("x: "+x);
                        for (int y = 0; y <Dungs.get(i).getY() ; y++)
@@ -259,6 +259,7 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
                              if(Dungs.get(i).DMap[x][y].RoomPlayers.get(h).getNomJ().equals(NomJ))
                                      {
                                        Position=(x+","+y);
+                                         //System.out.println("WhereIam() POSITION :"+Position);
                                        return Position;
                                      }
                         }          
@@ -338,23 +339,77 @@ public class GameServer extends UnicastRemoteObject implements GServerInt {
     }
 
 
-    public Room GetRoom(String NomR, String NomD) throws RemoteException {
+    public synchronized Room GetRoom(String NomR, String NomD) throws RemoteException {
          String[] parts = NomR.split(",");
-         System.out.println("GET ROOM : "+NomR);
+         //System.out.println("1 GET ROOM : "+NomR);
             String part1 = parts[0]; // x
             String part2 = parts[1]; //y
             int x = Integer.parseInt(part1);
             int y = Integer.parseInt(part2);
         for(int i=0; i<Dungs.size(); i++)
         {
+           // System.out.println("2 GetROOM : FOR");
             if(Dungs.get(i).NomD.equals(NomD))
-            {
+            {   //System.out.println("3 GetROOM : IF RETURN : x&y"+x+y);
                 return Dungs.get(i).DMap[x][y];
             }
         }
+        System.out.println("###########GETROOM ON NE DOIT PAS ETRE LA");
+        return Dungs.get(0).DMap[x][y];
+       // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public  int WriteMsg(String Msg, String NomJ, int x,int y, String NomD) throws RemoteException {
+        for(int i=0; i<Dungs.size(); i++)
+        {
+            if(Dungs.get(i).NomD.equals(NomD))
+            {
+                String msg=NomJ+":"+Msg;
+                System.out.println("Ajout du message :--"+msg+" -- Dnas la room : "+Dungs.get(i).DMap[x][y].getNomR());
+                System.out.println("Le size avant est : "+Dungs.get(i).DMap[x][y].Msg.size());
+                Dungs.get(i).DMap[x][y].Msg.add(msg);
+                System.out.println("Le size mntnt est : "+Dungs.get(i).DMap[x][y].Msg.size());
+                return Dungs.get(i).DMap[x][y].Msg.size();
+            }
+        }
+        System.out.println("###WRTIE MSG : ERROR");
+        return 0;
         
+}
+    
+    public  String GetNewMsgs(String nomJ,String NomD, int x, int y, int size) throws RemoteException {
+        String rtr=null;
+        
+        System.out.println("GetNEWmsgs");
+        if(1==1)
+        {
+            for(int i=0;i<Dungs.size();i++)
+            {
+                if(Dungs.get(i).getNomD().equals(NomD))
+                {
+                   rtr=Dungs.get(i).DMap[x][y].GiveAllMsg(nomJ, size); 
+                   System.out.println("Getnewmsg pr la room : "+Dungs.get(i).DMap[x][y].getNomR()+"rtr : "+rtr+"Pour le joueur :"+nomJ );
+                }
+            }
+            
+            
+            return rtr;
+        }
+        else
+    return rtr;
+    }
+
+    public int Getsize(String NomD, int x, int y) {
+        
+        for(int i=0; i<Dungs.size();i++)
+        {
+            if(Dungs.get(i).getNomD().equals(NomD))
+            {
+                return Dungs.get(i).DMap[x][y].Msg.size();
+            }
+            
+        }
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
- 
  

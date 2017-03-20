@@ -5,6 +5,7 @@
  */
 package ProjectPackage;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -108,4 +109,12 @@ public class Dungeon {
 		}
         return tmp;
     }
+     public  int DungWriteMsg(String Msg, String NomJ, Room R) {
+        String msg=NomJ+":"+Msg;
+        System.out.println("Ajout du message :--"+msg+" -- Dnas la room : "+R.NomR);
+        System.out.println("Le size avant est : "+R.Msg.size());
+        R.Msg.add(msg);
+        System.out.println("Le size mntnt est : "+R.Msg.size());
+        return R.Msg.size();
+}
 }

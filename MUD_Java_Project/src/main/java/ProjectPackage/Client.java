@@ -22,12 +22,20 @@ import java.util.logging.Logger;
  * @author Badr
  */
 
-class MsgThread extends Thread
+class MsgGetThread extends Thread
 {
     GServerInt rmi;
     Client CL;
     public int size;
- public MsgThread (Client C, GServerInt r)
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public int getSize() {
+        return size;
+    }
+ public MsgGetThread (Client C, GServerInt r)
  {
      rmi = r;
      CL = C;
@@ -36,20 +44,45 @@ class MsgThread extends Thread
     public void run() {
         System.out.println("DANS LE RUN");
         MServerInt rmiMSG;
-        String rtr="";
+        String rtr=null;
+        setSize(0);
         try {
-            Registry regMsg = LocateRegistry.getRegistry("127.0.0.79", 2020);
+           // Registry regMsg = LocateRegistry.getRegistry("127.0.0.79", 2020);
             
             //LocateRegistry.createRegistry(1099);
-             rmiMSG = (MServerInt) regMsg.lookup("rmi://127.0.0.79:2020/server");
+            // rmiMSG = (MServerInt) regMsg.lookup("rmi://127.0.0.79:2020/server");
             //System.out.println("THREAD"+this.rmi.GetRoom(this.rmi.WhereIam(this.CL.getName()), Integer.toString(this.CL.getMyDung())).GiveAllMsg());
-            rtr=rmiMSG.GetNewMsgs(CL.getName(), this.rmi.GetRoom(this.rmi.WhereIam(this.CL.getName()), Integer.toString(this.CL.getMyDung())));
-            System.out.println("THREAD : "+rtr);
+            
+           // System.out.println("Le size avant le while : "+getSize());
+           String wiam= rmi.WhereIam(CL.getName());
+                String[] parts = wiam.split(",");
+                //System.out.println("1 GET ROOM : "+NomR);
+                   String part1 = parts[0]; // x
+                   String part2 = parts[1]; //y
+                   int x = Integer.parseInt(part1);
+                   int y = Integer.parseInt(part2);
+                   setSize(rmi.Getsize(Integer.toString(CL.getMyDung()), x, y));
+                  // System.out.println("SIZE1 : "+getSize());
+            while(1==1){
+                rtr=null;
+            if(getSize()<rmi.Getsize(Integer.toString(CL.getMyDung()), x, y)){
+                 wiam= rmi.WhereIam(CL.getName());
+                parts = wiam.split(",");
+                //System.out.println("1 GET ROOM : "+NomR);
+                   part1 = parts[0]; // x
+                   part2 = parts[1]; //y
+                   x = Integer.parseInt(part1);
+                   y = Integer.parseInt(part2);
+                   setSize(rmi.Getsize(Integer.toString(CL.getMyDung()), x, y));
+                   //System.out.println("SIZE2 : "+getSize());
+                   rtr=rmi.GetNewMsgs(CL.getName(),Integer.toString(CL.getMyDung()), x,y, getSize());
+            }
+            if(rtr!=null) System.out.println(rtr);
+            }
+            
             //System.out.println("Taille : " +this.rmi.GetRoom(this.rmi.WhereIam(this.CL.getName()),Integer.toString(this.CL.getMyDung())).Msg.size());
         } catch (RemoteException ex) {
-            Logger.getLogger(MsgThread.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NotBoundException ex) {
-            Logger.getLogger(MsgThread.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MsgGetThread.class.getName()).log(Level.SEVERE, null, ex);
         }
           
        
@@ -64,10 +97,22 @@ private String name;
 private int RefChat;
 private int MyDung;
 
-public void WriteMsg()
-{
+public void sendmsg(Client CL, String msg, String NomJ, GServerInt rmi) throws RemoteException, NotBoundException
+  {
+      /*MServerInt rmiMSG;
+      Registry regMsg = LocateRegistry.getRegistry("127.0.0.79", 2020);
+      rmi = (MServerInt) regMsg.lookup("rmi://127.0.0.79:2020/server");*/
 
-}
+      String wiam=rmi.WhereIam(NomJ);
+      String[] parts = wiam.split(",");
+         //System.out.println("1 GET ROOM : "+NomR);
+            String part1 = parts[0]; // x
+            String part2 = parts[1]; //y
+            int x = Integer.parseInt(part1);
+            int y = Integer.parseInt(part2);
+      rmi.WriteMsg(msg, NomJ, x,y,Integer.toString(CL.getMyDung()));
+      
+  }
     public int getMyDung() {
         return MyDung;
     }
@@ -131,7 +176,7 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
             System.out.println("~ORDERS~ To see players of a precise Dungeon press 3 :");
             System.out.println("~ORDERS~ To exit the game press 99 :");
     }
-    public  void ShowDungOrders (GServerInt rmi, Client CL) throws RemoteException {
+    public  void ShowDungOrders (GServerInt rmi, Client CL, MsgGetThread t1 ) throws RemoteException {
             String MyPosition = rmi.WhereIam(CL.getName());
             String[] parts = MyPosition.split(",");
             String part1 = parts[0]; // x
@@ -142,12 +187,14 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
             if(r==1)
             {
             System.out.println("~CAUTION~ You're not alone in this room ! ");
+            
             }
             System.out.println("~ORDERS~ To display the Dungeon's Map Please press 1 :");
             System.out.println("~ORDERS~ To see the stat of the game Please press 2 :");
             System.out.println("~ORDERS~ To see Where I am press 3 :");
             System.out.println("~ORDERS~ To moove to other room press 4 :");
-            System.out.println("~ORDERS~ MSG 5 :");
+             if(r==1)
+            {System.out.println("~ORDERS~ To Send message to the room press 5:");}
             /* System.out.println("~ORDERS~ To see players of a precise Dungeon press 3 :");*/
             System.out.println("~ORDERS~ To exit the Dung please press 98 :");
     }
@@ -229,6 +276,7 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
     }
   public static void main(String[] args) throws NotBoundException {
       GServerInt rmi;
+      
       Scanner sc = new Scanner(System.in);
       try {
             Registry reg = LocateRegistry.getRegistry("127.0.0.78", 1010);
@@ -240,6 +288,7 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
         int rtr=0;
         int selection=0;
         Client CL= new Client();
+        MsgGetThread t1 = new MsgGetThread(CL,rmi);
         rtr=CL.ConnectToServer(CL, rmi);
         while (choice!=99)
         {
@@ -258,10 +307,11 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
                 {
                     System.out.println("~OK~ You are on Dungeon number : "+selection);
                     CL.MyDung=selection;
+                    t1.start();
                     System.out.println("mydun :" +CL.MyDung);
                     while (choice != 8)
                     {
-                        CL.ShowDungOrders(rmi, CL);
+                        CL.ShowDungOrders(rmi, CL, t1);
                         choice = sc.nextInt();
                         if(choice ==98)
                         {
@@ -300,8 +350,13 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
                         }
                          if (choice==5)
                          {
-                         MsgThread t1 = new MsgThread(CL,rmi);
-                         t1.start();
+                            System.out.println("=> Write your message :");
+                            Scanner scan = new Scanner(System.in);
+                            String str = scan.nextLine();
+                            CL.sendmsg(CL, str, CL.getName(), rmi);
+                           
+                           
+                         
                          }
                     }
                 }
@@ -327,5 +382,7 @@ private int ConnectToServer(Client CL, GServerInt rmi) throws RemoteException {
         Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
     }
 }
+  
+  
 
 }
